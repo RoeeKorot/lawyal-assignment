@@ -1,18 +1,20 @@
+import { GenericUnit } from "../weather";
+
 export interface WeatherData {
-    version: number;
-    key: string;
-    rank: number;
-    localizedName: string;
-    englishName: string;
-    primaryPostalCode: string;
-    region: Region;
-    country: Country;
-    administrativeArea: Area;
-    timeZone: TimeZone;
-    geoPosition: Position;
-    isAlias: boolean;
-    "supplementalAdminAreas": any[];
-    dataSets: string[]; 
+    Version: number;
+    Key: string;
+    Rank: number;
+    LocalizedName: string;
+    EnglishName: string;
+    PrimaryPostalCode: string;
+    Region: Region;
+    Country: Country;
+    AdministrativeArea: Area;
+    TimeZone: TimeZone;
+    GeoPosition: Position;
+    IsAlias: boolean;
+    SupplementalAdminAreas: any[];
+    DataSets: string[]; 
 }
 
  interface Region extends GeographicAreaName {}
@@ -20,39 +22,39 @@ export interface WeatherData {
  interface Country extends GeographicAreaName {}
 
  interface Area extends GeographicAreaName {
-    level: number;
-    localizedType: string; 
-    englishType: string;
-    countryID: string;
+    Level: number;
+    LocalizedType: string; 
+    EnglishType: string;
+    CountryID: string;
 }
 
 
  interface GeographicAreaName {
-    id: string;
+    ID: string;
     LocalizedName: string;
     EnglishName: string; 
 }
  interface TimeZone {
-    code: string;
-    name: string;
-    gmtOffset: number;
-    isDaylightSaving: boolean;
-    nextOffsetChange: string;
+    Code: string;
+    Name: string;
+    GmtOffset: number;
+    IsDaylightSaving: boolean;
+    NextOffsetChange: string;
 }
 
  interface Position {
-    latitude: number; 
-    longitude: number;
-    elevation: Elevation; 
+    Latitude: number; 
+    Longitude: number;
+    Elevation: Elevation; 
 }
 
  interface Elevation {
-    metric: GenericUnit;
-    imperial: GenericUnit;
+    Metric: GenericUnit;
+    Imperial: GenericUnit;
 }
 
- interface GenericUnit {
-    value: number;
-    unit: string;
-    unitType: string;
-}
+//  interface GenericUnit {
+//     Value: number;
+//     Unit: string;
+//     UnitType: string;
+// }

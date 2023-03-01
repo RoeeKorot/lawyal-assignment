@@ -1,1 +1,19 @@
-<p>weather works!</p>
+
+<input type="text" placeholder="Search City" #city>
+<button (click)="getLocationByCityName(city.value)">Search</button>
+
+    <div>{{weatherData?.Country?.ID}}</div>
+    <div>{{weatherData?.AdministrativeArea?.EnglishName}}</div>
+    
+    <div *ngFor="let temp of temperature">
+        <span>{{temp.Temperature.Metric.Value | number: '1.0-0'}}</span>
+        <span>{{temp.Temperature.Metric.Unit}}</span>
+    </div>
+
+    <div>
+        <h2>Forcast</h2>
+        <div *ngFor="let forecast of weeklyForecast?.DailyForecasts">
+            <p>{{forecast.Date}}</p>
+            <p>Temp: {{forecast.Temperature.Maximum.Value | number: '1.0-0'}} {{forecast.Temperature.Maximum.Unit}}</p>
+        </div>
+    </div>
