@@ -1,9 +1,10 @@
 <header>
     <nav class="navbar-container">
         <h1>weather app</h1>
-        <div>
-            <button routerLink="/weather">main</button>
-            <button routerLink="/fav">fav</button>
-        </div>
+        <ul class="navigation-list">
+            <li *ngFor="let link of navigationButtons" class="navigation-link">
+                <a [routerLink]="link.routePath" href="">{{link.label}}</a>
+            </li>
+        </ul>
     </nav>
 </header>
