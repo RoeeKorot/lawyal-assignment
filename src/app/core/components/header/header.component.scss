@@ -3,4 +3,16 @@
     align-items: center;
     justify-content: space-between;
     padding: 2rem;
+
+    .navigation-list {
+        display: flex;
+        gap: 10px;
+
+        .navigation-link {
+            padding: 1em;
+            background: lightblue;
+            border-radius: 0.2rem;
+            font-size: 20px;
+        }
+    }
 }
