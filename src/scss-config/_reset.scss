@@ -6,13 +6,20 @@
 
 html {
     font-size: 62.5%; // easy to calculate rem unit -- 2.1rem = 21px
+    height: 100%;
 }
 
 body {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 1.6rem;
-    width: 100%;
+    width: min(850px, 100%);
+    margin: auto;
+    padding: 0 1.5rem;
     height: 100vh;
+    background-image: url('../assets/images/clouds.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
 }
 
 ul {

@@ -1,19 +1,36 @@
-
-<input type="text" placeholder="Search City" #city>
-<button (click)="getLocationByCityName(city.value)">Search</button>
-
-    <div>{{weatherData?.Country?.ID}}</div>
-    <div>{{weatherData?.AdministrativeArea?.EnglishName}}</div>
-    
-    <div *ngFor="let temp of temperature">
-        <span>{{temp.Temperature.Metric.Value | number: '1.0-0'}}</span>
-        <span>{{temp.Temperature.Metric.Unit}}</span>
-    </div>
-
-    <div>
-        <h2>Forcast</h2>
-        <div *ngFor="let forecast of weeklyForecast?.DailyForecasts">
-            <p>{{forecast.Date}}</p>
-            <p>Temp: {{forecast.Temperature.Maximum.Value | number: '1.0-0'}} {{forecast.Temperature.Maximum.Unit}}</p>
+<div class="weather-container">
+    <form>
+        <input type="text" placeholder="Search City" #city (input)="getLocationByCityName(city.value)">
+        <button (click)="getLocationByCityName(city.value)">Search</button>
+    </form>
+    <div class="weather-details-box">
+        <div class="location-wrapper">
+            <div class="inner-location">
+                <span class="city">Tel Aviv, IL</span>
+                <span class="city-temperature">22C</span>
+            </div>
         </div>
+            <div class="forecasts-data">
+                <div class="weekly-forecast">
+                    <p class="date">2/3</p>
+                    <p class="temperature">25C</p>
+                </div>
+                <div class="weekly-forecast">
+                    <p class="date">2/3</p>
+                    <p class="temperature">25C</p>
+                </div>
+                <div class="weekly-forecast">
+                    <p class="date">2/3</p>
+                    <p class="temperature">25C</p>
+                </div>
+                <div class="weekly-forecast">
+                    <p class="date">2/3</p>
+                    <p class="temperature">25C</p>
+                </div>
+                <div class="weekly-forecast">
+                    <p class="date">2/3</p>
+                    <p class="temperature">25C</p>
+                </div>
+            </div>
     </div>
+</div>
