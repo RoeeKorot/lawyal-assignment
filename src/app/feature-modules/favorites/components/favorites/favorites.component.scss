@@ -1,0 +1,43 @@
+.favorite-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 5rem;
+    place-items: center;
+    padding-top: 8rem;
+
+  .favorite-card {
+    width: 90%;
+    height: 150px;
+    text-align: center;
+    padding: 2rem;
+    line-height: 2;
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 30px rgb(0 0 0 / 10%);
+    backdrop-filter: blur(2px);
+    border-radius: 12px;
+    transition: transform 300ms ease-in-out;
+
+    &:hover {
+        transform: translateY(-15px);
+    }
+
+    .favorite-city {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .temperature {
+      font-size: 2rem;
+    }
+    
+    @media(max-width: 679px) {
+        .favorite-city {
+            font-size: 1.8rem;
+        }
+        
+        .temperature {
+            font-size: 1.7rem;
+        }
+    }
+}
+}

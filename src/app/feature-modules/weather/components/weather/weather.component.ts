@@ -17,7 +17,7 @@ export class WeatherComponent implements OnInit {
   constructor(private weatherService: WeatherService) {}
 
   ngOnInit(): void {
-    this.getDefaultCity(this.defaultCityKey);
+    // this.getDefaultCity(this.defaultCityKey);
   }
 
   private getDefaultCity(locationKey: string): void {
