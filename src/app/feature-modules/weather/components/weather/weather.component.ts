@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
 import { WeatherService } from 'src/app/core/services/weather.service';
-import { WeatherData } from './../../interfaces/weather-data.interface';
+import { switchMap } from 'rxjs/operators';
 import { Forecast } from './../../interfaces/weekly-forecast.interface';
+import { AreaLocation } from '../../interfaces/weather-data.interface';
 
 @Component({
   selector: 'app-weather',
@@ -9,43 +11,72 @@ import { Forecast } from './../../interfaces/weekly-forecast.interface';
   styleUrls: ['./weather.component.scss']
 })
 export class WeatherComponent implements OnInit {
-  private defaultCityKey: string = '215854';
+  public autoCompleteInputField = new Subject<string>();
+  private DEFAULT_LATITUDE = 31.774;
+  private DEFAULT_LONGITUDE = 35.225;
   public temperature?: any;
-  public weatherData?: WeatherData;
   public weeklyForecast?: Forecast;
+  public cityObject: any = {};
 
   constructor(private weatherService: WeatherService) {}
 
   ngOnInit(): void {
-    // this.getDefaultCity(this.defaultCityKey);
-  }
-
-  private getDefaultCity(locationKey: string): void {
-    this.weatherService.getDefaultLocation(locationKey).subscribe(location => {
-      this.weatherData = location;
-      this.getWeather(this.weatherData.Key);
-      this.getWeeklyForecast(this.weatherData.Key);
-    })
+    this.setDefaultLocation();
+    // this.autoCompletedSearch();
   }
 
   private getWeather(locationKey: string) {
-    this.weatherService.getLocationWeather(locationKey).subscribe(weather => {
-      this.temperature = weather;
-      console.log(this.temperature)
+    this.weatherService.getLocationWeather(locationKey).subscribe((weather: any) => {
+      this.temperature = `${weather[0].Temperature.Metric.Value}`
     })
   }
 
-  public getLocationByCityName(city: string): void {
-      this.weatherService.getCityByName(city).subscribe((cities) => {
-        this.weatherData = cities[0];
-        this.getWeather(this.weatherData.Key);
-        this.getWeeklyForecast(this.weatherData.Key);
+  private autoCompletedSearch() {
+    this.autoCompleteInputField.pipe(
+      switchMap((data: string) => this.weatherService.getAutoCompleteLoaction(data)))
+      .subscribe((suggestions: AreaLocation[]) => {
+      this.cityObject = {
+        cityName: suggestions[0].AdministrativeArea.LocalizedName,
+        countryName: suggestions[0].Country.LocalizedName
+      };
+
+      suggestions.forEach((suggestion: AreaLocation) => {
+        return this.getWeather(suggestion.Key);
       })
+
+      this.getWeeklyForecast(suggestions[0].Key);
+    })
   }
+
 
   private getWeeklyForecast(locationKey: string): void {
       this.weatherService.getWeeklyForecastsWeather(locationKey).subscribe(location => {
         this.weeklyForecast = location;
     })
+  }
+
+  private setDefaultLocation(): void { //BONUS
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        const { latitude, longitude } = position.coords;
+        this.weatherService.defaultLoaction(latitude, longitude).subscribe(location => {
+          this.initializationLocation(location);
+        })
+      })
+    }
+
+    this.weatherService.defaultLoaction(this.DEFAULT_LATITUDE, this.DEFAULT_LONGITUDE).subscribe(location => {
+        this.initializationLocation(location);
+    })
+  }
+
+  private initializationLocation(initLocation: any) {
+    this.cityObject = {
+      cityName: initLocation.AdministrativeArea.EnglishName,
+      countryName: initLocation.Country.ID
+    };
+
+    this.getWeather(initLocation.Key);
+    this.getWeeklyForecast(initLocation.Key);
   }
 }
