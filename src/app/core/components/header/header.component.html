@@ -1,9 +1,9 @@
 <header>
     <nav class="navbar-container">
-        <h1>weather app</h1>
+        <img class="logo" src="assets/images/logo.png" alt="">
         <ul class="navigation-list">
-            <li *ngFor="let link of navigationButtons" class="navigation-link">
-                <a [routerLink]="link.routePath" href="">{{link.label}}</a>
+            <li *ngFor="let link of navigationButtons" class="navigation-item-link">
+                <a class="link" [routerLink]="link.routePath">{{link.label}}</a>
             </li>
         </ul>
     </nav>
