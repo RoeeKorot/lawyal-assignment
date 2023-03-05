@@ -1,13 +1,14 @@
 <div class="weather-container">
+    <button (click)="addToFavorites()" class="save-button">Save To Favorites</button>
     <form>
         <input type="text" placeholder="Search City" #city (keyup)="autoCompleteInputField.next(city.value)">
     </form>
     <div class="weather-details-box">
         <div class="location-wrapper">
             <div class="inner-location">
-                <span class="city">{{cityObject.cityName}}, {{cityObject.countryName}}</span>
+                <span class="city">{{cityObject['cityName']}}, {{cityObject['countryName']}}</span>
                 <span class="city-temperature">
-                    {{temperature?.Value | number: '1.0-0'}}{{temperature?.Unit}}
+                    {{temperature}}
                 </span>
             </div>
         </div>
@@ -21,3 +22,4 @@
         </div>
     </div>
 </div>
+
