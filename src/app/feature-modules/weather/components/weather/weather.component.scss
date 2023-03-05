@@ -23,7 +23,6 @@
         color: #000;
         font-size: 1.6rem;
         border-radius: 15px;
-        border: none;
         font-weight: 600;
 
         
@@ -46,10 +45,22 @@
       height: 180px;
 
       .inner-location {
-        .city {
+
+        .city-identity {
+          color: red;
+          font-size: 1.8rem;
+        }
+
+        .city:not(.city-identity) {
           display: block;
           font-size: 1.7rem;
+          font-weight: 600;
           margin-bottom: 1rem;
+          font-size: 3.5rem;
+        }
+
+        .yellow-star  {
+          color: yellow;
         }
 
         .city-temperature {

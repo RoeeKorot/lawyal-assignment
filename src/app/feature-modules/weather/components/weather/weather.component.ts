@@ -1,9 +1,10 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { WeatherService } from 'src/app/core/services/weather.service';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, filter } from 'rxjs/operators';
 import { Forecast } from './../../interfaces/weekly-forecast.interface';
 import { AreaLocation } from '../../interfaces/weather-data.interface';
+import { Favorites } from './../../../favorites/interfaces/favorites.interface';
 
 @Component({
   selector: 'app-weather',
@@ -17,6 +18,7 @@ export class WeatherComponent implements OnInit {
   public temperature?: string;
   public weeklyForecast?: Forecast;
   public cityObject: {[key: string]: any} = {};
+  public isInFavorites: boolean = false;
 
   constructor(private weatherService: WeatherService) {}
 
@@ -39,7 +41,7 @@ export class WeatherComponent implements OnInit {
         this.cityObject = {
           cityKey: suggestions[0].Key,
           cityName: suggestions[0].AdministrativeArea.LocalizedName,
-          countryName: suggestions[0].Country.LocalizedName
+          countryName: suggestions[0].Country.LocalizedName,
         };
         
         suggestions.forEach((suggestion: AreaLocation) => {
@@ -54,6 +56,7 @@ export class WeatherComponent implements OnInit {
   private getWeeklyForecast(locationKey: string): void {
       this.weatherService.getWeeklyForecastsWeather(locationKey).subscribe(location => {
         this.weeklyForecast = location;
+        console.log('LOCATION', location)
       })
     }
     
@@ -75,18 +78,39 @@ export class WeatherComponent implements OnInit {
     this.cityObject = {
       cityKey: initLocation.Key,
       cityName: initLocation.AdministrativeArea.EnglishName,
-      countryName: initLocation.Country.ID
+      countryName: initLocation.Country.ID      
     };
     this.getWeather(initLocation.Key);
     this.getWeeklyForecast(initLocation.Key);
+
+    let citiesInLocalStoarge = JSON.parse(localStorage.getItem('cities') || "[]");
+    citiesInLocalStoarge.forEach((element: Favorites) => {
+      if (element.cityKey === this.cityObject['cityKey']) {
+        this.isInFavorites = true;
+
+        return;
+      }
+
+      this.isInFavorites = false;
+    });
   }
 
   public addToFavorites() {
     let citiesInLocalStoarge = JSON.parse(localStorage.getItem('cities') || "[]");
-
+    
+    console.log(this.cityObject)
     citiesInLocalStoarge.push(this.cityObject)
     localStorage.setItem('cities', JSON.stringify(citiesInLocalStoarge))
   }
 
-  public removeFromFavorites() {}
+  public removeFromFavorites(cityToRemove: any) {
+    console.log(cityToRemove)
+    let citiesArray = [];
+    let storageData =  JSON.parse(localStorage.getItem('cities') || "[]");
+
+    citiesArray = storageData.filter((item: any, index: any) => item.cityKey !== cityToRemove);
+    localStorage.setItem('cities', citiesArray);
+
+    this.isInFavorites = false;
+  }
 }

@@ -9,7 +9,7 @@ import { WeatherService } from 'src/app/core/services/weather.service';
 })
 export class FavoritesComponent implements OnInit {
   public favoritesArray: Favorites[] = [];
-  public temperature: string | null = null;
+  public temperature: any[] = [];
 
   constructor(private weatherService: WeatherService) {}
 
@@ -18,12 +18,15 @@ export class FavoritesComponent implements OnInit {
   }
 
   getFavoriteCities(): void {
+    let storageCities: any[] = [];
     this.favoritesArray = JSON.parse(localStorage.getItem('cities') || "[]");
     this.favoritesArray.forEach(city => {
+      console.log('CITY', city)
       let cityIdentity = city.cityKey;
       this.weatherService.getLocationWeather(cityIdentity).subscribe(weather => {
-        console.log('CITY', weather)
-        this.temperature = `${weather[0].Temperature.Metric.Value}${weather[0].Temperature.Metric.Unit}`;
+        storageCities.push(...weather);
+        this.temperature.push(...weather);
       })})
+
   }
 }
