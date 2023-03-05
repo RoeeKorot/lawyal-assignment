@@ -1,36 +1,25 @@
 <div class="weather-container">
+    <button (click)="addToFavorites()" class="save-button">Save To Favorites</button>
     <form>
-        <input type="text" placeholder="Search City" #city (input)="getLocationByCityName(city.value)">
-        <!-- <button (click)="getLocationByCityName(city.value)">Search</button> -->
+        <input type="text" placeholder="Search City" #city (keyup)="autoCompleteInputField.next(city.value)">
     </form>
     <div class="weather-details-box">
         <div class="location-wrapper">
             <div class="inner-location">
-                <span class="city">Tel Aviv, IL</span>
-                <span class="city-temperature">22C</span>
+                <span class="city">{{cityObject['cityName']}}, {{cityObject['countryName']}}</span>
+                <span class="city-temperature">
+                    {{temperature}}
+                </span>
             </div>
         </div>
-            <div class="forecasts-data">
-                <div class="weekly-forecast">
-                    <p class="date">2/3</p>
-                    <p class="temperature">25C</p>
-                </div>
-                <div class="weekly-forecast">
-                    <p class="date">2/3</p>
-                    <p class="temperature">25C</p>
-                </div>
-                <div class="weekly-forecast">
-                    <p class="date">2/3</p>
-                    <p class="temperature">25C</p>
-                </div>
-                <div class="weekly-forecast">
-                    <p class="date">2/3</p>
-                    <p class="temperature">25C</p>
-                </div>
-                <div class="weekly-forecast">
-                    <p class="date">2/3</p>
-                    <p class="temperature">25C</p>
-                </div>
+        <div class="forecasts-data">
+            <div *ngFor="let forecast of weeklyForecast?.DailyForecasts" class="weekly-forecast">
+                <p class="date">2/3</p>
+                <p class="temperature">
+                    {{forecast.Temperature.Maximum.Value | number:'1.0-0'}}
+                    {{forecast.Temperature.Maximum.Unit}}</p>
             </div>
+        </div>
     </div>
 </div>
+
