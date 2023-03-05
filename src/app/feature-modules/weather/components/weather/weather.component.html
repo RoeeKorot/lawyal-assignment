@@ -6,14 +6,18 @@
         <div class="location-wrapper">
             <div class="inner-location">
                 <span class="city">{{cityObject.cityName}}, {{cityObject.countryName}}</span>
-                <span class="city-temperature">22C</span>
+                <span class="city-temperature">
+                    {{temperature?.Value | number: '1.0-0'}}{{temperature?.Unit}}
+                </span>
             </div>
         </div>
-            <div class="forecasts-data">
-                <div *ngFor="let forecast of weeklyForecast?.DailyForecasts" class="weekly-forecast">
-                    <p class="date">2/3</p>
-                    <p class="temperature">{{forecast.Temperature.Maximum.Value | number: '1.0-0'}}{{forecast.Temperature.Maximum.Unit}}</p>
-                </div>
+        <div class="forecasts-data">
+            <div *ngFor="let forecast of weeklyForecast?.DailyForecasts" class="weekly-forecast">
+                <p class="date">2/3</p>
+                <p class="temperature">
+                    {{forecast.Temperature.Maximum.Value | number:'1.0-0'}}
+                    {{forecast.Temperature.Maximum.Unit}}</p>
             </div>
+        </div>
     </div>
 </div>

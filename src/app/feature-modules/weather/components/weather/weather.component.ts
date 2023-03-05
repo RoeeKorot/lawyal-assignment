@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { WeatherService } from 'src/app/core/services/weather.service';
 import { switchMap } from 'rxjs/operators';
@@ -27,7 +27,7 @@ export class WeatherComponent implements OnInit {
 
   private getWeather(locationKey: string) {
     this.weatherService.getLocationWeather(locationKey).subscribe((weather: any) => {
-      this.temperature = `${weather[0].Temperature.Metric.Value}`
+      this.temperature = weather[0].Temperature.Metric;
     })
   }
 
@@ -55,19 +55,17 @@ export class WeatherComponent implements OnInit {
     })
   }
 
-  private setDefaultLocation(): void { //BONUS
+  private setDefaultLocation() { //BONUS
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(position => {
-        const { latitude, longitude } = position.coords;
-        this.weatherService.defaultLoaction(latitude, longitude).subscribe(location => {
-          this.initializationLocation(location);
-        })
-      })
+      const { latitude, longitude } = position.coords;
+      
+      this.weatherService.defaultLocation(latitude, longitude)
+        .subscribe(location => this.initializationLocation(location))});
     }
 
-    this.weatherService.defaultLoaction(this.DEFAULT_LATITUDE, this.DEFAULT_LONGITUDE).subscribe(location => {
-        this.initializationLocation(location);
-    })
+      this.weatherService.defaultLocation(this.DEFAULT_LATITUDE, this.DEFAULT_LONGITUDE)
+      .subscribe(location => this.initializationLocation(location));
   }
 
   private initializationLocation(initLocation: any) {
@@ -75,7 +73,6 @@ export class WeatherComponent implements OnInit {
       cityName: initLocation.AdministrativeArea.EnglishName,
       countryName: initLocation.Country.ID
     };
-
     this.getWeather(initLocation.Key);
     this.getWeeklyForecast(initLocation.Key);
   }
