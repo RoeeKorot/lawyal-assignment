@@ -12,7 +12,7 @@ interface NavbarButtons {
 })
 export class HeaderComponent {
   public navigationButtons: NavbarButtons[] = [
-    { label: 'weather', routePath: '/weather' },
+    { label: 'cities', routePath: '/weather' },
     { label: 'favorites', routePath: '/favorites' }
   ];
 

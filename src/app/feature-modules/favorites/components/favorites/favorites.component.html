@@ -2,7 +2,7 @@
 
 <div class="favorite-cards-container">
     <div *ngFor="let favorite of favoritesArray; let i = index" class="favorite-card">
-        <h1 class="favorite-city">{{favorite.cityName}}, {{favorite.countryName}}</h1>
-        <span class="temperature">{{temperature[i]?.Temperature?.Metric?.Value}}</span>
+        <h1 class="favorite-city">{{favorite.city}}, {{favorite.country}}</h1>
+        <span class="temperature">{{temperature[i]?.Temperature?.Metric?.Value}}°{{temperature[i]?.Temperature?.Metric?.Unit}}</span>
     </div>
 </div>

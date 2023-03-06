@@ -7,8 +7,12 @@
     margin-bottom: 5px;
     border-radius: 0.8rem;
     font-size: 1.6rem;
-    background: #d1f4ff;
+    background: #eaecec;
     cursor: pointer;
+
+    @media(max-width: 768px) {
+      font-size: 1.4rem;
+    }
   }
 
   form {
@@ -85,11 +89,6 @@
         text-align: center;
         padding: 1.5rem;
         background: white;
-        border-radius: 12px;
-        background: rgba(255, 255, 255, 0.2);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(4px);
-    
 
         .date {
           font-size: 17px;

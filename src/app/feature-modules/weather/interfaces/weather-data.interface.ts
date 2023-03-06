@@ -1,5 +1,3 @@
-import { GenericUnit } from "../weather";
-
 export interface AreaLocation {
     Version: number;
     Key: string;

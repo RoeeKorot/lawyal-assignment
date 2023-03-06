@@ -1,6 +1,12 @@
 <div class="weather-container">
-    <button (click)="addToFavorites()" class="save-button">Favorites</button>
-    <span class="city">{{cityObject['cityName']}}, {{cityObject['countryName']}}</span>
+    <div>
+        <ng-template [ngIf]="!isInFavorites">
+            <button (click)="addToFavorites()" class="save-button">Add To Favorites</button>
+        </ng-template>
+        <ng-template [ngIf]="isInFavorites">
+            <button (click)="addToFavorites()" class="save-button">Remove From Favorites</button>
+        </ng-template>
+    </div>
 
     <form>
         <input type="text" placeholder="Search City" #city (keyup)="autoCompleteInputField.next(city.value)">
@@ -8,12 +14,7 @@
     <div class="weather-details-box">
         <div class="location-wrapper">
             <div class="inner-location">
-                <span class="city-identity">Current Location: </span>
-                <span class="city">{{cityObject['cityName']}}, {{cityObject['countryName']}}
-                    
-                    <i  *ngIf="!isInFavorites" class="fa-regular fa-star"></i>
-                    <i *ngIf="isInFavorites" class="yellow-star fa-solid fa-star"></i>
-                </span>
+                <span class="city">{{cityObject['city']}}, {{cityObject['country']}}</span>
                 
 
                 <span class="city-temperature">
@@ -23,7 +24,7 @@
         </div>
         <div class="forecasts-data">
             <div *ngFor="let forecast of weeklyForecast?.DailyForecasts" class="weekly-forecast">
-                <p class="date">{{forecast.Date | date: 'dd/MM/yyyy'}}</p>
+                <p class="date">{{forecast.Date | date: 'dd/MM'}}</p>
                 <p class="temperature">
                     {{forecast.Temperature.Maximum.Value | number:'1.0-0'}}
                     {{forecast.Temperature.Maximum.Unit}}</p>
