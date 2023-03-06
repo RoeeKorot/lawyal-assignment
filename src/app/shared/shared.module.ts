@@ -6,13 +6,13 @@ import { SnackbarComponent } from './components/snackbar/snackbar.component';
 
 @NgModule({
   declarations: [
-    SnackbarComponent
+    SnackbarComponent,
   ],
   imports: [
     CommonModule
   ],
   exports: [
-    SnackbarComponent
+    SnackbarComponent,
   ]
 })
 export class SharedModule { }

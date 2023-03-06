@@ -21,7 +21,7 @@ export class WeatherComponent implements OnInit {
   public weeklyForecast?: Forecast;
   public cityObject: City = {} as City;
   public isInFavorites: boolean = false;
-  public errorMessage: string | null = null;
+  public inputChars: any;
 
   constructor(private weatherService: WeatherService, private snackbarService: SnackbarErrorService) {}
 
@@ -30,7 +30,6 @@ export class WeatherComponent implements OnInit {
     // this.autoCompletedSearch();
   }
 
-  
   private getWeather(locationKey: string) {
     this.weatherService.getLocationWeather(locationKey).subscribe({
       next: ((weather: any) => {
@@ -55,7 +54,6 @@ export class WeatherComponent implements OnInit {
         this.getWeeklyForecast(suggestions[0].Key);
       })
   }
-  
   
   private getWeeklyForecast(locationKey: string): void {
       this.weatherService.getWeeklyForecastsWeather(locationKey).subscribe({
@@ -97,28 +95,40 @@ export class WeatherComponent implements OnInit {
         this.isInFavorites = true;
         return;
       }
-
-      this.isInFavorites = false;
     });
   }
 
   public addToFavorites() {
-    let citiesInLocalStoarge = JSON.parse(localStorage.getItem('cities') || "[]");
+    const citiesInLocalStoarge: City[] = JSON.parse(localStorage.getItem('cities') || "[]");
+    const isInStorage = citiesInLocalStoarge.find(city => city.key === this.cityObject.key);
     
-    if (this.cityObject !== null) {
-      citiesInLocalStoarge.push(this.cityObject)
-      localStorage.setItem('cities', JSON.stringify(citiesInLocalStoarge))
-      return;
+    if (Object.keys(this.cityObject).length > 0) {
+      if (!isInStorage) {
+        citiesInLocalStoarge.push(this.cityObject)
+        localStorage.setItem('cities', JSON.stringify(citiesInLocalStoarge))
+      }
     }
+    this.isInFavorites = true;
   }
 
   public removeFromFavorites(cityToRemove: any) {
     let citiesArray = [];
-    let storageData =  JSON.parse(localStorage.getItem('cities') || "[]");
+    const storageData =  JSON.parse(localStorage.getItem('cities') || "[]");
 
     citiesArray = storageData.filter((item: City) => item.key !== cityToRemove);
-    localStorage.setItem('cities', citiesArray);
+    localStorage.setItem('cities', JSON.stringify(citiesArray));
 
     this.isInFavorites = false;
+  }
+
+  //ONLY ENGLISH LETTERS VALIDATION
+  inputValidation(event: any) {
+    const inputRegExp = /[a-zA-Z]/;
+    let inputChar = String.fromCharCode(event.keyCode);
+    
+    if (inputRegExp.test(inputChar)) return true; 
+    
+    event.preventDefault();
+    return false;  
   }
 }
