@@ -4,19 +4,22 @@
             <button (click)="addToFavorites()" class="save-button">Add To Favorites</button>
         </ng-template>
         <ng-template [ngIf]="isInFavorites">
-            <button (click)="addToFavorites()" class="save-button">Remove From Favorites</button>
+            <button (click)="removeFromFavorites(cityObject['key'])" class="save-button">Remove From Favorites</button>
         </ng-template>
     </div>
 
     <form>
-        <input type="text" placeholder="Search City" #city (keyup)="autoCompleteInputField.next(city.value)">
+        <input
+         type="text" 
+         placeholder="Search City" 
+         (keypress)="inputValidation($event)" 
+         (keyup)="autoCompleteInputField.next(city.value)"
+         #city>
     </form>
     <div class="weather-details-box">
         <div class="location-wrapper">
             <div class="inner-location">
                 <span class="city">{{cityObject['city']}}, {{cityObject['country']}}</span>
-                
-
                 <span class="city-temperature">
                     {{temperature}}
                 </span>
