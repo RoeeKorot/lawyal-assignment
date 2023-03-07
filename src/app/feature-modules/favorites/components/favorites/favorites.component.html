@@ -1,4 +1,6 @@
-<ng-template [ngIf]="favoritesArray.length === 0">EMpY</ng-template>
+<ng-template [ngIf]="favoritesArray.length === 0">
+    <p class="empty-favorites">Please add cities to favorites</p>
+</ng-template>
 
 <div class="favorite-cards-container">
     <div *ngFor="let favorite of favoritesArray" class="favorite-card">

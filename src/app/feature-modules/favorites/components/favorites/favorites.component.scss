@@ -1,3 +1,18 @@
+.empty-favorites {
+  width: 320px;
+  background: #fff47f;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.7rem;
+}
+
 .favorite-cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -23,21 +38,21 @@
     }
 
     .favorite-city {
-      font-size: 2.2rem;
+      font-size: 2rem;
       margin-bottom: 1rem;
     }
 
     .temperature {
-      font-size: 2rem;
+      font-size: 3rem;
     }
     
     @media(max-width: 679px) {
         .favorite-city {
-            font-size: 1.8rem;
+            font-size: 1.7rem;
         }
         
         .temperature {
-            font-size: 1.7rem;
+            font-size: 2.2rem;
         }
     }
 }

@@ -5,26 +5,25 @@
     </form>
     <div class="weather-details-box">
         <div class="location-wrapper">
-            <div class="inner-location">
-                <label>Current City:</label>
                 <span class="city">{{cityObject['city']}}, {{cityObject['country']}}
                     <ng-template [ngIf]="!isInFavorites">
-                        <i class="fa-regular fa-star" (click)="addToFavorites()"></i>
+                        <button class="tool-tip" matTooltipPosition="above" matTooltip="Add To Favourites">
+                            <i class="fa-regular fa-star" (click)="addToFavorites()"></i>
+                        </button>
                     </ng-template>
                     <ng-template [ngIf]="isInFavorites">
-                        <i (click)="removeFromFavorites(cityObject['key'])" class="fa-solid fa-star yellow-star"></i>
+                        <button class="tool-tip" matTooltipPosition="above" matTooltip="Remove From Favourites">
+                            <i (click)="removeFromFavorites(cityObject['key'])" class="fa-solid fa-star yellow-star"></i>
+                        </button>
                     </ng-template>
                 </span>
                 <span class="city-temperature">{{temperature}}</span>
-            
-            </div>
         </div>
         <div class="forecasts-data">
             <div *ngFor="let forecast of weeklyForecast?.DailyForecasts" class="weekly-forecast">
                 <p class="date">{{forecast.Date | date: 'dd/MM'}}</p>
                 <p class="temperature">
-                    {{forecast.Temperature.Maximum.Value | number:'1.0-0'}}°
-                    {{forecast.Temperature.Maximum.Unit}}
+                    {{forecast.Temperature.Maximum.Value | number:'1.0-0'}}°{{forecast.Temperature.Maximum.Unit}}
                 </p>
             </div>
         </div>

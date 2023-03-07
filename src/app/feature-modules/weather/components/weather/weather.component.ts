@@ -27,7 +27,7 @@ export class WeatherComponent implements OnInit {
 
   ngOnInit(): void {
     this.setDefaultLocation();
-    // this.autoCompletedSearch();
+    this.autoCompletedSearch();
   }
 
   private getWeather(locationKey: string) {
