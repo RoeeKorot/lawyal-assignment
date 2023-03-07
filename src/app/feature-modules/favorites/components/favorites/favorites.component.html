@@ -1,8 +1,9 @@
 <ng-template [ngIf]="favoritesArray.length === 0">EMpY</ng-template>
 
 <div class="favorite-cards-container">
-    <div *ngFor="let favorite of favoritesArray; let i = index" class="favorite-card">
+    <div *ngFor="let favorite of favoritesArray" class="favorite-card">
         <h1 class="favorite-city">{{favorite.city}}, {{favorite.country}}</h1>
-        <span class="temperature">{{temperature[i]?.Temperature?.Metric?.Value}}°{{temperature[i]?.Temperature?.Metric?.Unit}}</span>
+        <span class="temperature">{{temperature[0]?.Temperature?.Metric?.Value}}°{{temperature[0]?.Temperature?.Metric?.Unit}}</span>
     </div>
 </div>
+

@@ -1,36 +1,31 @@
 <div class="weather-container">
-    <div>
-        <ng-template [ngIf]="!isInFavorites">
-            <button (click)="addToFavorites()" class="save-button">Add To Favorites</button>
-        </ng-template>
-        <ng-template [ngIf]="isInFavorites">
-            <button (click)="removeFromFavorites(cityObject['key'])" class="save-button">Remove From Favorites</button>
-        </ng-template>
-    </div>
-
     <form>
-        <input
-         type="text" 
-         placeholder="Search City" 
-         (keypress)="inputValidation($event)" 
-         (keyup)="autoCompleteInputField.next(city.value)"
-         #city>
+        <input type="text" placeholder="Search City" (keypress)="inputValidation($event)"
+            (keyup)="autoCompleteInputField.next(city.value)" #city>
     </form>
     <div class="weather-details-box">
         <div class="location-wrapper">
             <div class="inner-location">
-                <span class="city">{{cityObject['city']}}, {{cityObject['country']}}</span>
-                <span class="city-temperature">
-                    {{temperature}}
+                <label>Current City:</label>
+                <span class="city">{{cityObject['city']}}, {{cityObject['country']}}
+                    <ng-template [ngIf]="!isInFavorites">
+                        <i class="fa-regular fa-star" (click)="addToFavorites()"></i>
+                    </ng-template>
+                    <ng-template [ngIf]="isInFavorites">
+                        <i (click)="removeFromFavorites(cityObject['key'])" class="fa-solid fa-star yellow-star"></i>
+                    </ng-template>
                 </span>
+                <span class="city-temperature">{{temperature}}</span>
+            
             </div>
         </div>
         <div class="forecasts-data">
             <div *ngFor="let forecast of weeklyForecast?.DailyForecasts" class="weekly-forecast">
                 <p class="date">{{forecast.Date | date: 'dd/MM'}}</p>
                 <p class="temperature">
-                    {{forecast.Temperature.Maximum.Value | number:'1.0-0'}}
-                    {{forecast.Temperature.Maximum.Unit}}</p>
+                    {{forecast.Temperature.Maximum.Value | number:'1.0-0'}}°
+                    {{forecast.Temperature.Maximum.Unit}}
+                </p>
             </div>
         </div>
     </div>
