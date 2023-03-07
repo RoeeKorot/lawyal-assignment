@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { WeatherService } from 'src/app/core/services/weather.service';
-import { City } from './../../../weather/interfaces/city.interface';
+import { City } from '@weather/interfaces/city.interface';
+import { Router, Routes } from '@angular/router';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-favorites',
@@ -11,7 +13,7 @@ export class FavoritesComponent implements OnInit {
   public favoritesArray: City[] = [];
   public temperature: any[] = [];
 
-  constructor(private weatherService: WeatherService) {}
+  constructor(private weatherService: WeatherService, private router: Router) {}
 
   ngOnInit() {
     this.getFavoriteCities();
@@ -23,10 +25,11 @@ export class FavoritesComponent implements OnInit {
 
     this.favoritesArray.forEach(city => {
       let cityIdentity = city.key;
-      this.weatherService.getLocationWeather(cityIdentity).subscribe(weather => {
+      this.weatherService.getLocationWeather(cityIdentity).pipe(take(1))
+      .subscribe(weather => {
         storageCities.push(...weather);
         this.temperature.push(...weather);
-      })})
-
+      })
+    })
   }
 }
