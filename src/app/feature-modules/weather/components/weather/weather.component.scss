@@ -1,3 +1,5 @@
+@import '_break-points';
+
 .weather-container {
   padding-top: 8rem;
 
@@ -10,7 +12,7 @@
     background: #eaecec;
     cursor: pointer;
 
-    @media(max-width: 768px) {
+    @include media-query(768px) {
       font-size: 1.4rem;
     }
   }
@@ -18,27 +20,31 @@
   form {
     display: flex;
     margin-bottom: 0.5rem;
+    width: 420px;
+    margin: auto;
+    transition: width 500ms;
 
     input[type="text"] {
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        padding: 1.5rem 1rem;
-        flex: 1;
-        outline: 0;
-        color: #000;
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      padding: 1.5rem 1rem;
+      flex: 1;
+      outline: 0;
+      color: #000;
+      font-size: 1.6rem;
+      border-radius: 0.8rem;
+      font-weight: 600;
+      border: none;
+
+
+      &::placeholder {
         font-size: 1.6rem;
-        border-radius: 15px;
+        color: #000;
         font-weight: 600;
-
-        
-        &::placeholder {
-            font-size: 1.6rem;
-            color: #000;
-            font-weight: 600;
       }
+    }
 
-      @media(max-width: 768px) {
-        padding-block: 1.1rem;
-      }
+    @include media-query(768px) {
+      width: 100%;
     }
   }
 
@@ -49,67 +55,69 @@
       text-align: center;
       padding: 4rem 0 4.5rem;
 
+      .city {
+        display: block;
+        font-size: 1.7rem;
+        font-weight: 600;
+        margin-bottom: 3rem;
+        font-size: 3.2rem;
+      }
+
+      .tool-tip {
+        vertical-align: middle;
+        margin-top: -6px;
+        background: transparent;
+        border: none;
+        outline: none;
+
+        i {
+          cursor: pointer;
+          font-size: 2rem;
+        }
+      }
+
+      .yellow-star {
+        color: #d9d950;
+      }
+
+      .city-temperature {
+        font-size: 3.5rem;
+      }
+
+      @include media-query(768px) {
         .city {
-          display: block;
-          font-size: 1.7rem;
-          font-weight: 600;
-          margin-bottom: 3rem;
-          font-size: 3.2rem;
-        }
-        .tool-tip {
-          vertical-align: middle;
-          margin-top: -6px;
-          background: transparent;
-          border: none;
-          outline: none;
-          i {
-            cursor: pointer;
-            font-size: 2rem;
-          }
-        }
-        
-        .yellow-star  {
-          color: #d9d950;
+          font-size: 2.5rem;
         }
 
         .city-temperature {
-          font-size: 3.5rem;
+          font-size: 2.7rem;
         }
-
-        @media(max-width: 768px) {
-
-          .city {
-            font-size: 2.5rem;
-          }
-          .city-temperature {
-            font-size: 2.7rem;
-          }
-        }
+      }
     }
 
-      .forecasts-data {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        place-items: center;
+    .forecasts-data {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      place-items: center;
 
-        @media(max-width: 768px) {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 4rem 0;
-        }
+      @include media-query(768px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4rem 0;
+      }
+    }
+
+    .weekly-forecast {
+      line-height: 1.5;
+      text-align: center;
+      padding: 1.5rem;
+
+      .date {
+        font-size: 1.7rem;
       }
 
-      .weekly-forecast {
-        line-height: 1.5;
-        text-align: center;
-        padding: 1.5rem;
-
-        .date {
-          font-size: 17px;
-        }
-
-        .temperature {
-          font-size: 25px;
-        }
+      .temperature {
+        font-size: 3rem;
       }
+    }
   }
 }
