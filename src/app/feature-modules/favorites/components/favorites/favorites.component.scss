@@ -1,3 +1,5 @@
+@import '_break-points';
+
 .empty-favorites {
   width: 320px;
   background: #fff47f;
@@ -38,22 +40,23 @@
     }
 
     .favorite-city {
-      font-size: 2rem;
+      font-size: 2.4rem;
       margin-bottom: 1rem;
     }
 
     .temperature {
-      font-size: 3rem;
+      font-size: 2.2rem;
     }
-    
-    @media(max-width: 679px) {
-        .favorite-city {
-            font-size: 1.7rem;
-        }
-        
-        .temperature {
-            font-size: 2.2rem;
-        }
+
+    @include media-query(679px) {
+      .favorite-city {
+          font-size: 2rem;
+      }
+      
+      .temperature {
+          font-size: 1.9rem;
+      }
+
     }
 }
 }
