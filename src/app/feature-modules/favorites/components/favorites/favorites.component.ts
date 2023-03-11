@@ -19,17 +19,12 @@ export class FavoritesComponent implements OnInit {
     this.getFavoriteCities();
   }
 
-  getFavoriteCities(): void {
-    let storageCities: City[] = [];
+  private getFavoriteCities(): void {
     this.favoritesArray = JSON.parse(localStorage.getItem('cities') || "[]");
-
     this.favoritesArray.forEach(city => {
       let cityIdentity = city.key;
-      this.weatherService.getLocationWeather(cityIdentity).pipe(take(1))
-      .subscribe(weather => {
-        storageCities.push(...weather);
-        this.temperature.push(...weather);
-      })
+      this.weatherService.getLocationWeather(cityIdentity)
+      .subscribe(weather => this.temperature.push(weather[0]))
     })
   }
 }

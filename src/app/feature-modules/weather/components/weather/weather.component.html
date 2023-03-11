@@ -7,12 +7,12 @@
         <div class="location-wrapper">
                 <span class="city">{{cityObject['city']}}, {{cityObject['country']}}
                     <ng-template [ngIf]="!isInFavorites">
-                        <button class="tool-tip" matTooltipPosition="above" matTooltip="Add To Favourites">
+                        <button class="tool-tip" matTooltipPosition="above" matTooltip="Add To Favorites">
                             <i class="fa-regular fa-star" (click)="addToFavorites()"></i>
                         </button>
                     </ng-template>
                     <ng-template [ngIf]="isInFavorites">
-                        <button class="tool-tip" matTooltipPosition="above" matTooltip="Remove From Favourites">
+                        <button class="tool-tip" matTooltipPosition="above" matTooltip="Remove From Favorites">
                             <i (click)="removeFromFavorites(cityObject['key'])" class="fa-solid fa-star yellow-star"></i>
                         </button>
                     </ng-template>

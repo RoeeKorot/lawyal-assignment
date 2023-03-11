@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { WeatherService } from 'src/app/core/services/weather.service';
-import { switchMap, take } from 'rxjs/operators';
+import { debounceTime, switchMap, take } from 'rxjs/operators';
 import { Forecast } from '@weather/interfaces/weekly-forecast.interface';
 import { AreaLocation } from '@weather/interfaces/weather-data.interface';
 import { SnackbarErrorService } from 'src/app/core/services/snackbar-error.service';
 import { DefaultLocation } from '@weather/interfaces/default-location.interface';
 import { City } from '@weather/interfaces/city.interface';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-weather',
@@ -15,13 +16,12 @@ import { City } from '@weather/interfaces/city.interface';
 })
 export class WeatherComponent implements OnInit {
   public autoCompleteInputField = new Subject<string>();
-  private DEFAULT_LATITUDE: number = 32.045;
-  private DEFAULT_LONGITUDE: number = 34.77;
+  private DEFAULT_LATITUDE: number = environment.TEL_AVIV_LATITUDE;
+  private DEFAULT_LONGITUDE: number = environment.TEL_AVIV_LONGITUDE;
   public temperature?: string;
   public weeklyForecast?: Forecast;
   public cityObject: City = {} as City;
   public isInFavorites: boolean = false;
-  public inputChars: any;
 
   constructor(private weatherService: WeatherService, private snackbarService: SnackbarErrorService) {}
 
@@ -40,21 +40,20 @@ export class WeatherComponent implements OnInit {
   
   private autoCompletedSearch() {
     this.autoCompleteInputField.pipe(
-      take(1),
+      debounceTime(1000),
       switchMap((data: string) => this.weatherService.getAutoCompleteLoaction(data)))
       .subscribe((suggestions: AreaLocation[]) => {
         this.cityObject = {
           key: suggestions[0].Key,
-          city: suggestions[0].AdministrativeArea.LocalizedName,
+          city: suggestions[0].LocalizedName,
           country: suggestions[0].Country.LocalizedName,
         };
-        
         suggestions.forEach((suggestion: AreaLocation) => {
           return this.getWeather(suggestion.Key);
         })
-        
         this.getWeeklyForecast(suggestions[0].Key);
       })
+      this.checkIfLocationSaved();
   }
   
   private getWeeklyForecast(locationKey: string): void {
@@ -65,40 +64,34 @@ export class WeatherComponent implements OnInit {
     }
     
   private setDefaultLocation() { //BONUS
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(position => {
+      navigator.geolocation.getCurrentPosition(
+      (position) => {
         const { latitude, longitude } = position.coords;
-        
-      this.weatherService.defaultLocation(latitude, longitude).pipe(take(1))
-      .subscribe({
-        next: ((location: DefaultLocation) => this.initializationLocation(location)), 
-        error: (error) => this.snackbarService.snackbarErrMessage(error) })
-      });
-    }
+        this.weatherService.defaultLocation(latitude, longitude).pipe(take(1))
+        .subscribe({
+          next: ((location: DefaultLocation) => this.initializationLocation(location)), 
+          error: (error) => this.snackbarService.snackbarErrMessage(error) })
+      },
+      () => {
+        this.weatherService.defaultLocation(this.DEFAULT_LATITUDE, this.DEFAULT_LONGITUDE).pipe(take(1))
+        .subscribe({
+          next: ((location: DefaultLocation) => {
+            this.initializationLocation(location)}),
+          error: ((error) => this.snackbarService.snackbarErrMessage(error))});
+      }
+      );
     
-    this.weatherService.defaultLocation(this.DEFAULT_LATITUDE, this.DEFAULT_LONGITUDE).pipe(take(1))
-    .subscribe({
-      next: ((location: DefaultLocation) => {
-        this.initializationLocation(location)}),
-      error: ((error) => this.snackbarService.snackbarErrMessage(error))});
   }
   
-  private initializationLocation(initLocation: any) {
+  private initializationLocation(initLocation: DefaultLocation) {
     this.cityObject = {
       key: initLocation.Key,
-      city: initLocation.AdministrativeArea.EnglishName,
+      city: initLocation.LocalizedName,
       country: initLocation.Country.ID
     };
-
     this.getWeather(initLocation.Key);
     this.getWeeklyForecast(initLocation.Key);
-
-    let citiesInLocalStoarge = JSON.parse(localStorage.getItem('cities') || "[]");
-    citiesInLocalStoarge.forEach((element: City) => {
-      this.isInFavorites = false;
-      if (element.key === this.cityObject['key'])
-        this.isInFavorites = true;
-    });
+    this.checkIfLocationSaved();
   }
 
   public addToFavorites() {
@@ -133,5 +126,16 @@ export class WeatherComponent implements OnInit {
     
     event.preventDefault();
     return false;  
+  }
+
+  private checkIfLocationSaved() {
+    let citiesInLocalStoarge = JSON.parse(localStorage.getItem('cities') || "[]");
+    citiesInLocalStoarge.filter((city: City) => city.key === this.cityObject['key']).forEach((city: City) => {
+      if (city.key === this.cityObject['key']) {
+        this.isInFavorites = true;
+        return;
+      }
+      this.isInFavorites = false;
+    });
   }
 }
