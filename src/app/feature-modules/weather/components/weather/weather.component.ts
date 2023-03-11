@@ -15,13 +15,13 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./weather.component.scss']
 })
 export class WeatherComponent implements OnInit {
-  public autoCompleteInputField = new Subject<string>();
   private DEFAULT_LATITUDE: number = environment.TEL_AVIV_LATITUDE;
   private DEFAULT_LONGITUDE: number = environment.TEL_AVIV_LONGITUDE;
+  public autoCompleteInputField = new Subject<string>();
   public temperature?: string;
-  public weeklyForecast?: Forecast;
-  public cityObject: City = {} as City;
-  public isInFavorites: boolean = false;
+  public forecasts?: Forecast;
+  public currentCity: City = {} as City;
+  public isFavorites: boolean = false;
 
   constructor(private weatherService: WeatherService, private snackbarService: SnackbarErrorService) {}
 
@@ -43,7 +43,7 @@ export class WeatherComponent implements OnInit {
       debounceTime(1000),
       switchMap((data: string) => this.weatherService.getAutoCompleteLoaction(data)))
       .subscribe((suggestions: AreaLocation[]) => {
-        this.cityObject = {
+        this.currentCity = {
           key: suggestions[0].Key,
           city: suggestions[0].LocalizedName,
           country: suggestions[0].Country.LocalizedName,
@@ -51,15 +51,16 @@ export class WeatherComponent implements OnInit {
         suggestions.forEach((suggestion: AreaLocation) => {
           return this.getWeather(suggestion.Key);
         })
-        this.getWeeklyForecast(suggestions[0].Key);
+
+        this.getForecast(suggestions[0].Key);
+        this.checkIfLocationSaved(this.currentCity['key']);
       })
-      this.checkIfLocationSaved();
-  }
+    }
   
-  private getWeeklyForecast(locationKey: string): void {
+  private getForecast(locationKey: string): void {
       this.weatherService.getWeeklyForecastsWeather(locationKey).pipe(take(1))
       .subscribe({
-        next: ((location: Forecast) => this.weeklyForecast = location),
+        next: ((location: Forecast) => this.forecasts = location),
         error: ((error) => this.snackbarService.snackbarErrMessage(error))});
     }
     
@@ -84,27 +85,27 @@ export class WeatherComponent implements OnInit {
   }
   
   private initializationLocation(initLocation: DefaultLocation) {
-    this.cityObject = {
+    this.currentCity = {
       key: initLocation.Key,
       city: initLocation.LocalizedName,
       country: initLocation.Country.ID
     };
     this.getWeather(initLocation.Key);
-    this.getWeeklyForecast(initLocation.Key);
-    this.checkIfLocationSaved();
+    this.getForecast(initLocation.Key);
+    this.checkIfLocationSaved(this.currentCity['key']);
   }
 
   public addToFavorites() {
     const citiesInLocalStoarge: City[] = JSON.parse(localStorage.getItem('cities') || "[]");
-    const isInStorage = citiesInLocalStoarge.find(city => city.key === this.cityObject.key);
+    const isInStorage = citiesInLocalStoarge.find(city => city.key === this.currentCity.key);
     
-    if (Object.keys(this.cityObject).length > 0) {
+    if (Object.keys(this.currentCity).length > 0) {
       if (!isInStorage) {
-        citiesInLocalStoarge.push(this.cityObject)
+        citiesInLocalStoarge.push(this.currentCity)
         localStorage.setItem('cities', JSON.stringify(citiesInLocalStoarge))
       }
     }
-    this.isInFavorites = true;
+    this.isFavorites = true;
   }
 
   public removeFromFavorites(cityToRemove: string) {
@@ -114,7 +115,7 @@ export class WeatherComponent implements OnInit {
     citiesArray = storageData.filter((item: City) => item.key !== cityToRemove);
     localStorage.setItem('cities', JSON.stringify(citiesArray));
 
-    this.isInFavorites = false;
+    this.isFavorites = false;
   }
 
   //ONLY ENGLISH LETTERS VALIDATION
@@ -128,14 +129,13 @@ export class WeatherComponent implements OnInit {
     return false;  
   }
 
-  private checkIfLocationSaved() {
-    let citiesInLocalStoarge = JSON.parse(localStorage.getItem('cities') || "[]");
-    citiesInLocalStoarge.filter((city: City) => city.key === this.cityObject['key']).forEach((city: City) => {
-      if (city.key === this.cityObject['key']) {
-        this.isInFavorites = true;
-        return;
-      }
-      this.isInFavorites = false;
-    });
+  private checkIfLocationSaved(key: any) {
+    const citiesInLocalStoarge = JSON.parse(localStorage.getItem('cities') || "[]");
+    const isFavorite = citiesInLocalStoarge.some((city: City) => city.key === key);
+    if (isFavorite) 
+      this.isFavorites = true;
+
+    else 
+      this.isFavorites = false;
   }
 }
