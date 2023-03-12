@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { WeatherService } from 'src/app/core/services/weather.service';
-import { debounceTime, switchMap, take } from 'rxjs/operators';
+import { debounceTime, switchMap, take, takeWhile } from 'rxjs/operators';
 import { Forecast } from '@weather/interfaces/weekly-forecast.interface';
 import { AreaLocation } from '@weather/interfaces/weather-data.interface';
 import { SnackbarErrorService } from 'src/app/core/services/snackbar-error.service';
 import { DefaultLocation } from '@weather/interfaces/default-location.interface';
 import { City } from '@weather/interfaces/city.interface';
 import { environment } from 'src/environments/environment';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-weather',
@@ -23,10 +24,26 @@ export class WeatherComponent implements OnInit {
   public currentCity: City = {} as City;
   public isFavorites: boolean = false;
 
-  constructor(private weatherService: WeatherService, private snackbarService: SnackbarErrorService) {}
+  constructor(
+    private weatherService: WeatherService, 
+    private snackbarService: SnackbarErrorService, 
+    private route: ActivatedRoute
+    ) {}
 
   ngOnInit(): void {
-    this.setDefaultLocation();
+    const favoriteLocation = JSON.parse(localStorage.getItem('selectedLocation') || "{}");
+    if (favoriteLocation && Object.keys(favoriteLocation).length > 0) {
+      const { key, city, country } = favoriteLocation;
+      this.currentCity = {key, city, country};
+      this.getWeather(key);
+      this.getForecast(key);
+      this.checkIfLocationSaved(key);
+      localStorage.removeItem('selectedLocation');
+    }
+    else {
+      this.setDefaultLocation();
+    }
+
     this.autoCompletedSearch();
   }
 
@@ -88,7 +105,7 @@ export class WeatherComponent implements OnInit {
     this.currentCity = {
       key: initLocation.Key,
       city: initLocation.LocalizedName,
-      country: initLocation.Country.ID
+      country: initLocation.Country.LocalizedName
     };
     this.getWeather(initLocation.Key);
     this.getForecast(initLocation.Key);

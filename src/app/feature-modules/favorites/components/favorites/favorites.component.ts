@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, QueryList } from '@angular/core';
 import { WeatherService } from 'src/app/core/services/weather.service';
 import { City } from '@weather/interfaces/city.interface';
 import { Router, Routes } from '@angular/router';
@@ -26,5 +26,10 @@ export class FavoritesComponent implements OnInit {
       this.weatherService.getLocationWeather(cityIdentity)
       .subscribe(weather => this.temperature.push(weather[0]))
     })
+  }
+
+  selectedLocation(key: City) {
+    localStorage.setItem('selectedLocation', JSON.stringify(key));
+    this.router.navigate(['/weather']);
   }
 }
